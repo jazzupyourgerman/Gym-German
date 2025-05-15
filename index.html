@@ -1,351 +1,267 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hörverständnis & Quiz</title>
- 
- <style>
-    body {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deutsch im Gym Quiz</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
       text-align: center;
-      margin: 20px;
-      background-color: black;
+    }
+
+    .start-screen, .question-screen, .result-screen {
+      display: none;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .start-screen {
+      background-image: url('https://res.cloudinary.com/dgk2pnahd/image/upload/v1744492761/Titelbild_igabvu.png');
+      display: flex;
+    }
+
+    .start-screen h1 {
       color: white;
-    }
-
-    .text-container, .quiz-container, .result-container {
-      max-width: 600px;
-      margin: 20px auto;
-      font-size: 18px;
-    }
-
-    .controls {
-      margin-top: 10px;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px #000;
     }
 
     button {
-      font-size: 16px;
-      padding: 10px;
-      margin: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      #prevButton:hover,
-      #nextButton:hover,
-      #prevQuestion:hover,
-      #nextQuestion:hover,
-      #zurueckZumTextButton:hover,
-      #goToQuizButton:hover,
-      #backToTextFromResult:hover {
-        background-color: #e0e0e0;
-        color: black;
-      }
-    }
-
-    .quiz-container, .result-container {
-      display: none;
-    }
-
-    .question {
-      font-weight: bold;
-    }
-
-    .answer {
-      display: block;
-      margin: 5px;
-      padding: 10px;
-      cursor: pointer;
-      border: 1px solid #fff;
-      background-color: #222;
-      color: white;
-    }
-
-    .correct {
-      background-color: lightgreen;
-      color: black;
-    }
-
-    .wrong {
-      background-color: lightcoral;
-      color: black;
-    }
-
-    .blue-text {
-      color: yellow;
-      font-weight: bold;
-    }
-
-    .icon-links img {
-      width: 50px;
-      height: 50px;
-      margin: 10px;
-      cursor: pointer;
-      background-color: white;
-      border-radius: 50%;
-      padding: 5px;
-    }
-
-    .icon-links a {
-      display: inline-block;
-      text-decoration: none;
-      color: #ffcc00;
-      text-align: center;
-      margin: 10px;
-      font-weight: bold;
-    }
-
-    .icon-links p {
-      margin: 5px 0 0;
-      font-size: 14px;
-    }
-
-    #progressContainer, #quizProgressContainer {
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    .progress-bar-background {
-      background-color: #555;
-      height: 10px;
-      width: 100%;
-      border-radius: 5px;
-    }
-
-    .progress-bar-fill {
-      height: 10px;
-      background-color: #4caf50;
-      border-radius: 5px;
-      width: 0%;
-    }
-
-    #goToQuizButton, .zurueck-button, #backToTextFromResult {
-      background-color: #2196f3;
+      padding: 10px 20px;
+      font-size: 0.9em;
+      background-color: #007bff;
       color: white;
       border: none;
-      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .question-screen {
+      display: none;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: column;
+      padding: 40px 20px 20px;
+    }
+
+    .question-screen img {
+      width: 100%;
+      max-width: 300px;
+      max-height: 40vh;
+      margin-bottom: 25px;
+      border-radius: 10px;
+    }
+
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .answers button {
+      padding: 8px 12px;
+      font-size: 0.85em;
+    }
+
+    .result-screen h2 {
+      font-size: 1.5em;
+    }
+
+    .result-screen p {
+      margin-top: 10px;
+      font-size: 1em;
+    }
+
+    .corrections {
+      text-align: left;
+      max-width: 500px;
+      margin: 20px auto;
+      font-size: 0.95em;
+    }
+
+    .corrections p {
+      margin: 4px 0;
+    }
+
+    @media (min-width: 768px) {
+      .start-screen h1 {
+        font-size: 2em;
+      }
+
+      button {
+        padding: 15px 30px;
+        font-size: 1em;
+      }
+
+      .question-screen img {
+        max-width: 500px;
+      }
     }
   </style>
-
 </head>
 <body>
-  <h2>Jazz Up Your German © "Hunger Games"</h2>
-
-  <iframe id="soundcloudPlayer" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
-    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2095607442&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
-  </iframe>
-
-  <div id="progressContainer">
-    <div class="progress-bar-background">
-      <div id="progressBar" class="progress-bar-fill"></div>
-    </div>
+  <div class="start-screen">
+    <h1>Teste dein Gym-Deutsch!<br>A1 oder C1?</h1>
+    <button onclick="startQuiz()">Starte das Bilderquiz!</button>
   </div>
 
-  <div class="text-container" id="textContainer">
-    <p id="text"></p>
+  <div class="question-screen">
+    <img id="quiz-image" src="" alt="Quiz Bild">
+    <div class="answers" id="answer-buttons"></div>
   </div>
 
-  <div class="controls">
-    <button id="prevButton">⬅️ Zurück</button>
-    <button id="nextButton">Weiter ➡️</button>
-    <button id="goToQuizButton">Zum Quiz</button>
+  <div class="result-screen">
+    <h2 id="score-text"></h2>
+    <p>Check meine Seite aus und folge mir auf Instagram.</p>
+
+    <div class="corrections" id="correction-list"></div>
+
+    <a href="https://jazzupyourgerman.com" target="_blank">
+      <button style="margin: 10px;">Zur Website</button>
+    </a>
+
+    <a href="https://www.instagram.com/jazzupyourgerman/" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" style="width: 40px; height: 40px; margin-top: 10px;">
+    </a>
   </div>
 
-  <div class="quiz-container" id="quizContainer">
-    <div id="quizProgressContainer">
-      <div class="progress-bar-background">
-        <div id="quizProgressBar" class="progress-bar-fill"></div>
-      </div>
-    </div>
-    <p class="question" id="question"></p>
-    <div id="answers"></div>
-    <div class="quiz-buttons">
-      <button class="zurueck-button" id="zurueckZumTextButton">⬅️ Zurück zum Text</button>
-      <div>
-        <button id="prevQuestion">Vorherige Frage</button>
-        <button id="nextQuestion">Nächste Frage ➡️</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="result-container" id="resultContainer">
-    <h3>Test abgeschlossen!</h3>
-    <p id="score"></p>
-    <div class="icon-links">
-      <a href="https://www.jazzupyourgerman.com" target="_blank">
-        <img src="https://img.icons8.com/ios-filled/100/000000/domain.png" alt="Webseite"/>
-        <p>➡️ Go to website</p>
-      </a><br>
-      <a href="https://www.instagram.com/jazzupyourgerman" target="_blank">
-        <img src="https://img.icons8.com/ios-filled/100/000000/instagram-new.png" alt="Instagram"/>
-        <p>➡️ Follow JAZZ UP YOUR GERMAN on Instagram!</p>
-      </a>
-    </div>
-    <button id="backToTextFromResult">🔁 Zurück zum Text</button>
-  </div>
 
 <script>
-const textAbschnitte = [
-  "In einem Land namens Panem leben die Menschen in zwölf Distrikten. Diese Distrikte werden vom Kapitol regiert (are governed by the Capitol). Das Kapitol ist reich und mächtig (rich and powerful). Die Distrikte sind arm (poor). Früher gab es einen Krieg, weil die Distrikte gegen das Kapitol gekämpft haben (fought against the Capitol).",
-  "Das Kapitol hat den Krieg gewonnen (won the war). Zur Strafe müssen die Distrikte jedes Jahr zwei Kinder in die sogenannten Hungerspiele schicken (send two children to the Hunger Games): ein Mädchen und einen Jungen (a girl and a boy). Diese Kinder heißen „Tribute“ (are called “tributes”). In einer großen Arena müssen sie gegeneinander kämpfen (have to fight against each other) – bis nur noch ein Kind lebt (until only one child is left alive).",
-  "Katniss kehrt nach Hause zurück (returns home). Doch sie weiß: Die Hungerspiele waren erst der Anfang (the Hunger Games were just the beginning). Ein größerer Kampf steht bevor (a bigger fight is coming). In den Distrikten beginnt Unruhe (unrest begins in the districts). Die Menschen haben Hoffnung (people have hope). Katniss muss sich entscheiden, wie es weitergeht (Katniss has to decide what comes next)."
-];
+  const questions = [
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490986/wegra%CC%88umen_qcdha6.png', options: ['essen', 'ausräumen', 'wegräumen', 'aufräumen'], correct: 2 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/dem_lyukcr.png', options: ['dem', 'der', 'das', 'ein'], correct: 0 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490984/Sa%CC%88tze_wpvlid.png', options: ['Sätzen', 'Sätze', 'Hantel', 'Hanteln'], correct: 1 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/Mitgliedschaft_zweni2.png', options: ['Mitgliedschaft', 'Abonnement', 'Isolationsübung', 'Supplement'], correct: 0 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/Klimmzu%CC%88ge_e1skzq.png', options: ['Liegestütze', 'Klimmzüge', 'Sit-ups', 'Joggen'], correct: 1 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490984/aufbauen_rbqgxf.png', options: ['zerstören', 'erhöhen', 'aufbauen', 'größer werden'], correct: 2 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490986/abwechseln_shjlco.png', options: ['stärker werden', 'spotten', 'abwechseln', 'trainieren'], correct: 2 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490986/freie_Gewichte_i9gd4n.png', options: ['Gewichten', 'Geräten', 'Getränken', 'Handtüchern'], correct: 0 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/runternehmen_anh80m.png', options: ['runternehmen', 'abnehmen', 'klein machen', 'weniger machen'], correct: 0 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490987/Muskelkater_sikbb3.png', options: ['Muskelkalter', 'Rückenschmerzen', 'Kater', 'Bizeps'], correct: 0 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/benutze_iwumis.png', options: ['trainiere', 'hebe', 'benutze', 'arbeite'], correct: 2 },
+    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490986/Schulterdru%CC%88cken_kkanvs.png', options: ['Latziehen', 'Liegestütze', 'Kniebeugen', 'Schulterdrücken'], correct: 3 },
+  ];
 
-const quizFragen = [
-  { frage: "Was bedeutet 'are governed by'?", antworten: ["A) werden regiert von", "B) werden gebaut von", "C) werden gesehen von"], korrekt: 0 },
-  { frage: "Was bedeutet 'resistance'?", antworten: ["A) Angriff", "B) Widerstand", "C) Hoffnung"], korrekt: 1 },
-  { frage: "Was bedeutet 'returns home'?", antworten: ["A) kehrt nach Hause zurück", "B) geht zur Schule", "C) flieht aus dem Land"], korrekt: 0 }
-];
+  const correctionTexts = [
+    "Könntest du bitte deine Gewichte <b>wegräumen</b>?",
+    "Ich nehme EAA vor <b>dem</b> Training.",
+    "Wie viel kostet die <b>Mitgliedschaft</b>?",
+    "<b>Klimmzüge</b> sind eine Grundübung für den Rücken.",
+    "Ich möchte Muskeln <b>aufbauen</b>.",
+    "Können wir uns am Gerät <b>abwechseln</b>?",
+    "Ich trainiere gern mit freien <b>Gewichten</b>.",
+    "Zu viel Gewicht? Du musst Gewicht <b>runternehmen</b>.",
+    "Morgen habe ich <b>Muskelkater</b>!",
+    "Ich <b>benutze</b> das gerade!",
+    "<b>Schulterdrücken</b> ist eine gute Übung für die Schulter!"
+  ];
 
-let currentIndex = 0;
-let quizIndex = 0;
-let richtigeAntworten = 0;
+  let currentQuestion = 0;
+  let score = 0;
+  let incorrectAnswers = [];
 
-function updateTextProgress() {
-  const percent = ((currentIndex + 1) / textAbschnitte.length) * 100;
-  document.getElementById("progressBar").style.width = percent + "%";
-}
-
-function ladeText() {
-  document.getElementById("text").innerHTML =
-    textAbschnitte[currentIndex].replace(/\(([^)]+)\)/g, '<span class="blue-text">($1)</span>');
-  updateTextProgress();
-  document.getElementById("nextButton").style.display = currentIndex >= textAbschnitte.length - 1 ? "none" : "inline-block";
-}
-
-ladeText();
-
-document.getElementById("nextButton").addEventListener("click", () => {
-  if (currentIndex < textAbschnitte.length - 1) {
-    currentIndex++;
-    ladeText();
+  function startQuiz() {
+    document.querySelector('.start-screen').style.display = 'none';
+    document.querySelector('.question-screen').style.display = 'flex';
+    showQuestion();
   }
-});
 
-document.getElementById("prevButton").addEventListener("click", () => {
-  if (currentIndex > 0) {
-    currentIndex--;
-    ladeText();
-  }
-});
-
-document.getElementById("goToQuizButton").addEventListener("click", () => {
-  document.getElementById("textContainer").style.display = "none";
-  document.querySelector(".controls").style.display = "none";
-  document.getElementById("progressContainer").style.display = "none";
-  document.getElementById("quizContainer").style.display = "block";
-  ladeFrage();
-});
-
-function ladeFrage() {
-  if (quizIndex < quizFragen.length) {
-    document.getElementById("question").innerText = quizFragen[quizIndex].frage;
-    document.getElementById("quizProgressBar").style.width = ((quizIndex + 1) / quizFragen.length) * 100 + "%";
-
-    const answerContainer = document.getElementById("answers");
-    answerContainer.innerHTML = "";
-
-    quizFragen[quizIndex].antworten.forEach((antwort, index) => {
-      const button = document.createElement("button");
-      button.innerText = antwort;
-      button.classList.add("answer");
-      button.addEventListener("click", () => {
-        if (index === quizFragen[quizIndex].korrekt) {
-          button.classList.add("correct");
-          richtigeAntworten++;
-        } else {
-          button.classList.add("wrong");
-        }
-        Array.from(answerContainer.children).forEach(btn => btn.disabled = true);
-      });
-      answerContainer.appendChild(button);
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    document.getElementById('quiz-image').src = q.image;
+    const answerButtons = document.getElementById('answer-buttons');
+    answerButtons.innerHTML = '';
+    q.options.forEach((option, index) => {
+      const btn = document.createElement('button');
+      btn.textContent = option;
+      btn.onclick = () => handleAnswer(btn, index);
+      answerButtons.appendChild(btn);
     });
-  } else {
-    zeigeErgebnis();
   }
-}
 
-document.getElementById("nextQuestion").addEventListener("click", () => {
-  if (quizIndex < quizFragen.length - 1) {
-    quizIndex++;
-    ladeFrage();
-  } else {
-    zeigeErgebnis();
-  }
-});
+  function handleAnswer(clickedButton, index) {
+    const buttons = document.querySelectorAll('#answer-buttons button');
+    const correctIndex = questions[currentQuestion].correct;
 
-document.getElementById("prevQuestion").addEventListener("click", () => {
-  if (quizIndex > 0) {
-    quizIndex--;
-    ladeFrage();
-  }
-});
-
-document.getElementById("zurueckZumTextButton").addEventListener("click", () => {
-  document.getElementById("quizContainer").style.display = "none";
-  document.getElementById("textContainer").style.display = "block";
-  document.querySelector(".controls").style.display = "block";
-  document.getElementById("progressContainer").style.display = "block";
-  ladeText();
-  updateTextProgress();
-});
-
-document.getElementById("backToTextFromResult").addEventListener("click", () => {
-  document.getElementById("resultContainer").style.display = "none";
-  document.getElementById("textContainer").style.display = "block";
-  document.querySelector(".controls").style.display = "block";
-  document.getElementById("progressContainer").style.display = "block";
-  currentIndex = 0;
-  ladeText();
-});
-
-function zeigeErgebnis() {
-  document.getElementById("quizContainer").style.display = "none";
-  document.getElementById("resultContainer").style.display = "block";
-  document.getElementById("score").innerText = `Du hast ${richtigeAntworten} von ${quizFragen.length} Fragen richtig beantwortet.`;
-}
-
-// Swipe-Funktion für Text- und Quiz-Container
-let startX = 0;
-let endX = 0;
-
-function handleTouchStart(e) {
-  startX = e.changedTouches[0].screenX;
-}
-
-function handleTouchEnd(e) {
-  endX = e.changedTouches[0].screenX;
-  handleGesture();
-}
-
-function handleGesture() {
-  const diffX = endX - startX;
-  if (Math.abs(diffX) > 50) {
-    if (diffX > 0) {
-      // Swipe nach rechts → zurück
-      if (document.getElementById("textContainer").style.display !== "none") {
-        document.getElementById("prevButton").click();
-      } else if (document.getElementById("quizContainer").style.display !== "none") {
-        document.getElementById("prevQuestion").click();
+    buttons.forEach((btn, i) => {
+      btn.disabled = true;
+      if (i === correctIndex) {
+        btn.style.backgroundColor = '#28a745'; // grün
+      } else if (i === index) {
+        btn.style.backgroundColor = '#dc3545'; // rot
+      } else {
+        btn.style.backgroundColor = '#ccc';
       }
+    });
+
+    if (index === correctIndex) {
+      score++;
     } else {
-      // Swipe nach links → weiter
-      if (document.getElementById("textContainer").style.display !== "none") {
-        document.getElementById("nextButton").click();
-      } else if (document.getElementById("quizContainer").style.display !== "none") {
-        document.getElementById("nextQuestion").click();
-      }
+      incorrectAnswers.push(currentQuestion);
     }
-  }
-}
 
-// Event-Listener für Touch-Events
-document.addEventListener("touchstart", handleTouchStart, false);
-document.addEventListener("touchend", handleTouchEnd, false);
+    currentQuestion++;
+    setTimeout(() => {
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }, 1200);
+  }
+
+  function showResult() {
+    document.querySelector('.question-screen').style.display = 'none';
+    const resultScreen = document.querySelector('.result-screen');
+    resultScreen.style.display = 'flex';
+    let resultText = '';
+    if (score >= 10) resultText = '🏋️‍♂️ Mega gemacht!';
+    else if (score >= 7) resultText = '💪 Richtig stark!';
+    else if (score >= 4) resultText = '👍 Ganz okay, aber da geht mehr!';
+    else resultText = '😅 Nicht schlimm, einfach weitermachen!';
+
+    document.getElementById('score-text').innerHTML = `${resultText}<br>Du hast <b>${score}</b> von <b>${questions.length}</b> richtig.`;
+
+    const correctionList = document.getElementById('correction-list');
+    correctionList.innerHTML = '';
+    incorrectAnswers.forEach(index => {
+      const p = document.createElement('p');
+      p.innerHTML = correctionTexts[index];
+      correctionList.appendChild(p);
+    });
+  }
 </script>
 
-     
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>
