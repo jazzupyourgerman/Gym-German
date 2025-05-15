@@ -12,11 +12,33 @@
       font-size: 18px;
     }
     .controls { margin-top: 10px; }
-    button { font-size: 16px; padding: 40px; margin: 5px; cursor: pointer; }
+
+    /* Alle Buttons grundsätzlich */
+    button {
+      font-size: 16px;
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    /* Nur Vor-/Zurück-Buttons (Text und Quiz) – doppelt so hoch */
+    #prevButton, #nextButton,
+    #prevQuestion, #nextQuestion {
+      padding: 20px 10px;
+    }
+
+    /* Zurück-zum-Text-Button bleibt unverändert */
+    .zurueck-button {
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      font-weight: bold;
+    }
+
     .quiz-container, .result-container { display: none; }
     .question { font-weight: bold; }
     .answer {
-      display: block; margin: 5px; padding: 40px;
+      display: block; margin: 5px; padding: 10px;
       cursor: pointer; border: 1px solid #000;
     }
     .correct { background-color: lightgreen; }
@@ -54,12 +76,6 @@
       justify-content: space-between;
       flex-wrap: wrap;
       margin-top: 10px;
-    }
-    .zurueck-button {
-      background-color: #2196f3;
-      color: white;
-      border: none;
-      font-weight: bold;
     }
   </style>
 </head>
@@ -123,18 +139,13 @@ const textAbschnitte = [
   "In einem Land namens Panem leben die Menschen in zwölf Distrikten. Diese Distrikte werden vom Kapitol regiert (are governed by the Capitol). Das Kapitol ist reich und mächtig (rich and powerful). Die Distrikte sind arm (poor). Früher gab es einen Krieg, weil die Distrikte gegen das Kapitol gekämpft haben (fought against the Capitol).",
 
   "Das Kapitol hat den Krieg gewonnen (won the war). Zur Strafe müssen die Distrikte jedes Jahr zwei Kinder in die sogenannten Hungerspiele schicken (send two children to the Hunger Games): ein Mädchen und einen Jungen (a girl and a boy). Diese Kinder heißen „Tribute“ (are called “tributes”). In einer großen Arena müssen sie gegeneinander kämpfen (have to fight against each other) – bis nur noch ein Kind lebt (until only one child is left alive).",
-
 ];
 
-
-
-  const quizFragen = [
-    { frage: "Was bedeutet 'are governed by'?", antworten: ["A) werden regiert von", "B) werden gebaut von", "C) werden gesehen von"], korrekt: 0 },
-    { frage: "Was bedeutet 'powerful'?", antworten: ["A) freundlich", "B) mächtig", "C) neugierig"], korrekt: 1 },
-    { frage: "Was bedeutet 'fought'?", antworten: ["A) getanzt", "B) gehofft", "C) gekämpft"], korrekt: 2 },
- 
+const quizFragen = [
+  { frage: "Was bedeutet 'are governed by'?", antworten: ["A) werden regiert von", "B) werden gebaut von", "C) werden gesehen von"], korrekt: 0 },
+  { frage: "Was bedeutet 'powerful'?", antworten: ["A) freundlich", "B) mächtig", "C) neugierig"], korrekt: 1 },
+  { frage: "Was bedeutet 'fought'?", antworten: ["A) getanzt", "B) gehofft", "C) gekämpft"], korrekt: 2 },
 ];
-
 
 let currentIndex = 0;
 let quizIndex = 0;
