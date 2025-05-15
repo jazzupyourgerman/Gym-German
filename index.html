@@ -5,13 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hörverständnis & Quiz</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+      background-color: black;
+      color: white;
+    }
+
     .text-container, .quiz-container, .result-container {
       max-width: 600px;
       margin: 20px auto;
       font-size: 18px;
     }
-    .controls { margin-top: 10px; }
+
+    .controls {
+      margin-top: 10px;
+    }
+
     button {
       font-size: 16px;
       padding: 10px;
@@ -20,71 +31,102 @@
       transition: background-color 0.3s;
     }
 
-    /* Hover-Effekt nur bei Geräten mit Maus */
     @media (hover: hover) and (pointer: fine) {
       #prevButton:hover,
       #nextButton:hover,
       #prevQuestion:hover,
       #nextQuestion:hover,
-      #zurueckZumTextButton:hover {
+      #zurueckZumTextButton:hover,
+      #goToQuizButton:hover,
+      #backToTextFromResult:hover {
         background-color: #e0e0e0;
+        color: black;
       }
     }
 
-    .quiz-container, .result-container { display: none; }
-    .question { font-weight: bold; }
-    .answer {
-      display: block; margin: 5px; padding: 10px;
-      cursor: pointer; border: 1px solid #000;
+    .quiz-container, .result-container {
+      display: none;
     }
-    .correct { background-color: lightgreen; }
-    .wrong { background-color: lightcoral; }
-    .blue-text { color: blue; font-weight: bold; }
-    .icon-links img {
-      width: 50px; height: 50px; margin: 10px; cursor: pointer;
-    }
-    .icon-links a {
-      display: inline-block; text-decoration: none;
-      color: black; text-align: center; margin: 10px;
-    }
-    .icon-links p {
-      margin: 5px 0 0; font-size: 14px;
-    }
-    #progressContainer, #quizProgressContainer {
-      margin-bottom: 15px; text-align: center;
-    }
-    .progress-bar-background {
-      background-color: #ddd; height: 10px;
-      width: 100%; border-radius: 5px;
-    }
-    .progress-bar-fill {
-      height: 10px; background-color: #4caf50;
-      border-radius: 5px; width: 0%;
-    }
-    #goToQuizButton {
-      background-color: #2196f3;
-      color: white;
-      border: none;
+
+    .question {
       font-weight: bold;
     }
-    .quiz-buttons {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin-top: 10px;
+
+    .answer {
+      display: block;
+      margin: 5px;
+      padding: 10px;
+      cursor: pointer;
+      border: 1px solid #fff;
+      background-color: #222;
+      color: white;
     }
-    .zurueck-button {
+
+    .correct {
+      background-color: lightgreen;
+      color: black;
+    }
+
+    .wrong {
+      background-color: lightcoral;
+      color: black;
+    }
+
+    .blue-text {
+      color: yellow;
+      font-weight: bold;
+    }
+
+    .icon-links img {
+      width: 50px;
+      height: 50px;
+      margin: 10px;
+      cursor: pointer;
+      background-color: white;
+      border-radius: 50%;
+      padding: 5px;
+    }
+
+    .icon-links a {
+      display: inline-block;
+      text-decoration: none;
+      color: #ffcc00;
+      text-align: center;
+      margin: 10px;
+      font-weight: bold;
+    }
+
+    .icon-links p {
+      margin: 5px 0 0;
+      font-size: 14px;
+    }
+
+    #progressContainer, #quizProgressContainer {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .progress-bar-background {
+      background-color: #555;
+      height: 10px;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    .progress-bar-fill {
+      height: 10px;
+      background-color: #4caf50;
+      border-radius: 5px;
+      width: 0%;
+    }
+
+    #goToQuizButton, .zurueck-button, #backToTextFromResult {
       background-color: #2196f3;
       color: white;
       border: none;
       font-weight: bold;
     }
   </style>
-
-
-
-
-
 </head>
 <body>
   <h2>Jazz Up Your German © "Hunger Games"</h2>
@@ -130,7 +172,7 @@
     <h3>Test abgeschlossen!</h3>
     <p id="score"></p>
     <div class="icon-links">
-      <a href="https://www.jazzupyougerman.com" target="_blank">
+      <a href="https://www.jazzupyourgerman.com" target="_blank">
         <img src="https://img.icons8.com/ios-filled/100/000000/domain.png" alt="Webseite"/>
         <p>➡️ Go to website</p>
       </a><br>
@@ -139,155 +181,169 @@
         <p>➡️ Follow JAZZ UP YOUR GERMAN on Instagram!</p>
       </a>
     </div>
+    <button id="backToTextFromResult">🔁 Zurück zum Text</button>
   </div>
 
-  <script>
-    const textAbschnitte = [
-      "In einem Land namens Panem leben die Menschen in zwölf Distrikten. Diese Distrikte werden vom Kapitol regiert (are governed by the Capitol). Das Kapitol ist reich und mächtig (rich and powerful). Die Distrikte sind arm (poor). Früher gab es einen Krieg, weil die Distrikte gegen das Kapitol gekämpft haben (fought against the Capitol).",
-      "Das Kapitol hat den Krieg gewonnen (won the war). Zur Strafe müssen die Distrikte jedes Jahr zwei Kinder in die sogenannten Hungerspiele schicken (send two children to the Hunger Games): ein Mädchen und einen Jungen (a girl and a boy). Diese Kinder heißen „Tribute“ (are called “tributes”). In einer großen Arena müssen sie gegeneinander kämpfen (have to fight against each other) – bis nur noch ein Kind lebt (until only one child is left alive).",
-    ];
+<script>
+const textAbschnitte = [
+  "In einem Land namens Panem leben die Menschen in zwölf Distrikten. Diese Distrikte werden vom Kapitol regiert (are governed by the Capitol). Das Kapitol ist reich und mächtig (rich and powerful). Die Distrikte sind arm (poor). Früher gab es einen Krieg, weil die Distrikte gegen das Kapitol gekämpft haben (fought against the Capitol).",
+  "Das Kapitol hat den Krieg gewonnen (won the war). Zur Strafe müssen die Distrikte jedes Jahr zwei Kinder in die sogenannten Hungerspiele schicken (send two children to the Hunger Games): ein Mädchen und einen Jungen (a girl and a boy). Diese Kinder heißen „Tribute“ (are called “tributes”). In einer großen Arena müssen sie gegeneinander kämpfen (have to fight against each other) – bis nur noch ein Kind lebt (until only one child is left alive).",
+  "Katniss kehrt nach Hause zurück (returns home). Doch sie weiß: Die Hungerspiele waren erst der Anfang (the Hunger Games were just the beginning). Ein größerer Kampf steht bevor (a bigger fight is coming). In den Distrikten beginnt Unruhe (unrest begins in the districts). Die Menschen haben Hoffnung (people have hope). Katniss muss sich entscheiden, wie es weitergeht (Katniss has to decide what comes next)."
+];
 
-    const quizFragen = [
-      { frage: "Was bedeutet 'are governed by'?", antworten: ["A) werden regiert von", "B) werden gebaut von", "C) werden gesehen von"], korrekt: 0 },
-      { frage: "Was bedeutet 'powerful'?", antworten: ["A) freundlich", "B) mächtig", "C) neugierig"], korrekt: 1 },
-      { frage: "Was bedeutet 'fought'?", antworten: ["A) getanzt", "B) gehofft", "C) gekämpft"], korrekt: 2 },
-    ];
+const quizFragen = [
+  { frage: "Was bedeutet 'are governed by'?", antworten: ["A) werden regiert von", "B) werden gebaut von", "C) werden gesehen von"], korrekt: 0 },
+  { frage: "Was bedeutet 'resistance'?", antworten: ["A) Angriff", "B) Widerstand", "C) Hoffnung"], korrekt: 1 },
+  { frage: "Was bedeutet 'returns home'?", antworten: ["A) kehrt nach Hause zurück", "B) geht zur Schule", "C) flieht aus dem Land"], korrekt: 0 }
+];
 
-    let currentIndex = 0;
-    let quizIndex = 0;
-    let richtigeAntworten = 0;
+let currentIndex = 0;
+let quizIndex = 0;
+let richtigeAntworten = 0;
 
-    function updateTextProgress() {
-      const percent = ((currentIndex + 1) / textAbschnitte.length) * 100;
-      document.getElementById("progressBar").style.width = percent + "%";
-    }
+function updateTextProgress() {
+  const percent = ((currentIndex + 1) / textAbschnitte.length) * 100;
+  document.getElementById("progressBar").style.width = percent + "%";
+}
 
-    function ladeText() {
-      document.getElementById("text").innerHTML =
-        textAbschnitte[currentIndex].replace(/\(([^)]+)\)/g, '<span class="blue-text">($1)</span>');
-      updateTextProgress();
+function ladeText() {
+  document.getElementById("text").innerHTML =
+    textAbschnitte[currentIndex].replace(/\(([^)]+)\)/g, '<span class="blue-text">($1)</span>');
+  updateTextProgress();
+  document.getElementById("nextButton").style.display = currentIndex >= textAbschnitte.length - 1 ? "none" : "inline-block";
+}
 
-      document.getElementById("nextButton").style.display =
-        currentIndex >= textAbschnitte.length - 1 ? "none" : "inline-block";
-    }
+ladeText();
 
+document.getElementById("nextButton").addEventListener("click", () => {
+  if (currentIndex < textAbschnitte.length - 1) {
+    currentIndex++;
     ladeText();
+  }
+});
 
-    document.getElementById("nextButton").addEventListener("click", () => {
-      if (currentIndex < textAbschnitte.length - 1) {
-        currentIndex++;
-        ladeText();
-      }
-    });
+document.getElementById("prevButton").addEventListener("click", () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    ladeText();
+  }
+});
 
-    document.getElementById("prevButton").addEventListener("click", () => {
-      if (currentIndex > 0) {
-        currentIndex--;
-        ladeText();
-      }
-    });
+document.getElementById("goToQuizButton").addEventListener("click", () => {
+  document.getElementById("textContainer").style.display = "none";
+  document.querySelector(".controls").style.display = "none";
+  document.getElementById("progressContainer").style.display = "none";
+  document.getElementById("quizContainer").style.display = "block";
+  ladeFrage();
+});
 
-    document.getElementById("goToQuizButton").addEventListener("click", () => {
-      document.getElementById("textContainer").style.display = "none";
-      document.querySelector(".controls").style.display = "none";
-      document.getElementById("progressContainer").style.display = "none";
-      document.getElementById("quizContainer").style.display = "block";
-      ladeFrage();
-    });
+function ladeFrage() {
+  if (quizIndex < quizFragen.length) {
+    document.getElementById("question").innerText = quizFragen[quizIndex].frage;
+    document.getElementById("quizProgressBar").style.width = ((quizIndex + 1) / quizFragen.length) * 100 + "%";
 
-    function ladeFrage() {
-      if (quizIndex < quizFragen.length) {
-        document.getElementById("question").innerText = quizFragen[quizIndex].frage;
-        document.getElementById("quizProgressBar").style.width =
-          ((quizIndex + 1) / quizFragen.length) * 100 + "%";
+    const answerContainer = document.getElementById("answers");
+    answerContainer.innerHTML = "";
 
-        const answerContainer = document.getElementById("answers");
-        answerContainer.innerHTML = "";
-
-        quizFragen[quizIndex].antworten.forEach((antwort, index) => {
-          const button = document.createElement("button");
-          button.innerText = antwort;
-          button.classList.add("answer");
-          button.addEventListener("click", () => {
-            if (index === quizFragen[quizIndex].korrekt) {
-              button.classList.add("correct");
-              richtigeAntworten++;
-            } else {
-              button.classList.add("wrong");
-            }
-            Array.from(answerContainer.children).forEach(btn => btn.disabled = true);
-          });
-          answerContainer.appendChild(button);
-        });
-      } else {
-        zeigeErgebnis();
-      }
-    }
-
-    document.getElementById("nextQuestion").addEventListener("click", () => {
-      if (quizIndex < quizFragen.length - 1) {
-        quizIndex++;
-        ladeFrage();
-      } else {
-        zeigeErgebnis();
-      }
-    });
-
-    document.getElementById("prevQuestion").addEventListener("click", () => {
-      if (quizIndex > 0) {
-        quizIndex--;
-        ladeFrage();
-      }
-    });
-
-    document.getElementById("zurueckZumTextButton").addEventListener("click", () => {
-      document.getElementById("quizContainer").style.display = "none";
-      document.getElementById("textContainer").style.display = "block";
-      document.querySelector(".controls").style.display = "block";
-      document.getElementById("progressContainer").style.display = "block";
-      ladeText();
-      updateTextProgress();
-    });
-
-    function zeigeErgebnis() {
-      document.getElementById("quizContainer").style.display = "none";
-      document.getElementById("resultContainer").style.display = "block";
-      document.getElementById("score").innerText =
-        `Du hast ${richtigeAntworten} von ${quizFragen.length} Fragen richtig beantwortet.`;
-    }
-
-    // ✅ Swipe-Unterstützung (nur für Touch-Geräte)
-    function addSwipeSupport(element, onSwipeLeft, onSwipeRight) {
-      let touchStartX = 0;
-      let touchEndX = 0;
-
-      element.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-      });
-
-      element.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleGesture();
-      });
-
-      function handleGesture() {
-        const diff = touchEndX - touchStartX;
-        if (Math.abs(diff) > 50) {
-          if (diff < 0) onSwipeLeft();
-          else onSwipeRight();
+    quizFragen[quizIndex].antworten.forEach((antwort, index) => {
+      const button = document.createElement("button");
+      button.innerText = antwort;
+      button.classList.add("answer");
+      button.addEventListener("click", () => {
+        if (index === quizFragen[quizIndex].korrekt) {
+          button.classList.add("correct");
+          richtigeAntworten++;
+        } else {
+          button.classList.add("wrong");
         }
+        Array.from(answerContainer.children).forEach(btn => btn.disabled = true);
+      });
+      answerContainer.appendChild(button);
+    });
+  } else {
+    zeigeErgebnis();
+  }
+}
+
+document.getElementById("nextQuestion").addEventListener("click", () => {
+  if (quizIndex < quizFragen.length - 1) {
+    quizIndex++;
+    ladeFrage();
+  } else {
+    zeigeErgebnis();
+  }
+});
+
+document.getElementById("prevQuestion").addEventListener("click", () => {
+  if (quizIndex > 0) {
+    quizIndex--;
+    ladeFrage();
+  }
+});
+
+document.getElementById("zurueckZumTextButton").addEventListener("click", () => {
+  document.getElementById("quizContainer").style.display = "none";
+  document.getElementById("textContainer").style.display = "block";
+  document.querySelector(".controls").style.display = "block";
+  document.getElementById("progressContainer").style.display = "block";
+  ladeText();
+  updateTextProgress();
+});
+
+document.getElementById("backToTextFromResult").addEventListener("click", () => {
+  document.getElementById("resultContainer").style.display = "none";
+  document.getElementById("textContainer").style.display = "block";
+  document.querySelector(".controls").style.display = "block";
+  document.getElementById("progressContainer").style.display = "block";
+  currentIndex = 0;
+  ladeText();
+});
+
+function zeigeErgebnis() {
+  document.getElementById("quizContainer").style.display = "none";
+  document.getElementById("resultContainer").style.display = "block";
+  document.getElementById("score").innerText = `Du hast ${richtigeAntworten} von ${quizFragen.length} Fragen richtig beantwortet.`;
+}
+
+// Swipe-Funktion für Text- und Quiz-Container
+let startX = 0;
+let endX = 0;
+
+function handleTouchStart(e) {
+  startX = e.changedTouches[0].screenX;
+}
+
+function handleTouchEnd(e) {
+  endX = e.changedTouches[0].screenX;
+  handleGesture();
+}
+
+function handleGesture() {
+  const diffX = endX - startX;
+  if (Math.abs(diffX) > 50) {
+    if (diffX > 0) {
+      // Swipe nach rechts → zurück
+      if (document.getElementById("textContainer").style.display !== "none") {
+        document.getElementById("prevButton").click();
+      } else if (document.getElementById("quizContainer").style.display !== "none") {
+        document.getElementById("prevQuestion").click();
+      }
+    } else {
+      // Swipe nach links → weiter
+      if (document.getElementById("textContainer").style.display !== "none") {
+        document.getElementById("nextButton").click();
+      } else if (document.getElementById("quizContainer").style.display !== "none") {
+        document.getElementById("nextQuestion").click();
       }
     }
+  }
+}
 
-    addSwipeSupport(document.getElementById("textContainer"),
-      () => { if (currentIndex < textAbschnitte.length - 1) { currentIndex++; ladeText(); } },
-      () => { if (currentIndex > 0) { currentIndex--; ladeText(); } }
-    );
+// Event-Listener für Touch-Events
+document.addEventListener("touchstart", handleTouchStart, false);
+document.addEventListener("touchend", handleTouchEnd, false);
+</script>
 
-    addSwipeSupport(document.getElementById("quizContainer"),
-      () => { if (quizIndex < quizFragen.length - 1) { quizIndex++; ladeFrage(); } else { zeigeErgebnis(); } },
-      () => { if (quizIndex > 0) { quizIndex--; ladeFrage(); } }
-    );
-  </script>
+     
 </body>
 </html>
