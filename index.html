@@ -181,7 +181,7 @@
 </head>
 <body>
   <div class="start-screen">
-    <img src="logoo.png" alt="Logo" class="logo">
+    <img src="logo.png" alt="Logo" class="logo">
     <h1>Swipe left or right!</h1>
     <button class="start-button" onclick="startQuiz()">Los geht’s!</button>
   </div>
@@ -206,66 +206,47 @@
     </div>
   </div>
 <script>
-const questions = [
-  { text: "Hat er angefangen auf dem Gymnasium?", options: ["A-t-il commencé à l’université ?", "A-t-il commencé au lycée ?"], correct: 1 },
-  { text: "das Lycée", options: ["l’université", "le lycée"], correct: 1 },
-  { text: "ein französisches …", options: ["un … allemand", "un … français"], correct: 1 },
-  { text: "schummeln", options: ["réussir", "tricher"], correct: 1 },
-  { text: "Ich schummel(e)", options: ["j’étudie", "je triche"], correct: 1 },
-  { text: "Ich habe geschummelt", options: ["j’ai triché", "j’ai étudié"], correct: 0 },
-  { text: "das FG", options: ["la fac", "le FG"], correct: 1 },
-  { text: "Ich gehe zum FG", options: ["je vais au cinéma", "je vais au FG"], correct: 1 },
-  { text: "ins FG", options: ["dans la fac", "au FG"], correct: 1 },
-
-  { text: "Enkelkinder", options: ["les cousins", "les petits-enfants"], correct: 1 },
-  { text: "die Enkeltochter", options: ["la petite-fille", "la cousine"], correct: 0 },
-  { text: "der Enkelsohn", options: ["le petit-fils", "le neveu"], correct: 0 },
-  { text: "meine Enkel und Urenkel", options: ["mes enfants et cousins", "mes petits-enfants et arrière-petits-enfants"], correct: 1 },
-
-  { text: "das Sachbuch", options: ["le roman", "le livre documentaire"], correct: 1 },
-  { text: "der Roman", options: ["le poème", "le roman"], correct: 1 },
-
-  { text: "blind werden", options: ["voir clair", "devenir aveugle"], correct: 1 },
-  { text: "Vielleicht wird sie bald blind", options: ["Peut-être qu’elle va bientôt devenir aveugle", "Peut-être qu’elle voit bien"], correct: 0 },
-  { text: "Vielleicht wird sie bald blind werden", options: ["Peut-être qu’elle deviendra bientôt aveugle", "Peut-être qu’elle est en bonne santé"], correct: 0 },
-  { text: "Vielleicht wird sie bald blind sein", options: ["Peut-être qu’elle sera bientôt riche", "Peut-être qu’elle sera bientôt aveugle"], correct: 1 },
-  { text: "Sie wird vielleicht blind.", options: ["Elle deviendra peut-être aveugle.", "Elle entendra peut-être bien."], correct: 0 },
-  { text: "Sie ist blind geworden", options: ["Elle est restée en bonne santé", "Elle est devenue aveugle"], correct: 1 },
-
-  { text: "die Kunst (künstlich)", options: ["la nature", "l’art (artificiel)"], correct: 1 },
-  { text: "das Gemälde", options: ["le livre", "le tableau"], correct: 1 },
-  { text: "das Kunstwerk", options: ["le travail", "l’œuvre d’art"], correct: 1 },
-  { text: "die Kunstwerke", options: ["les œuvres d’art", "les travaux"], correct: 0 },
-  { text: "Schaut sie sich zusammen mit ihrem Opa die großen Kunstwerke an?", options: ["Lit-elle un roman avec son grand-père ?", "Regarde-t-elle les grandes œuvres d’art avec son grand-père ?"], correct: 1 },
-  { text: "sich an die Kunstwerke erinnern (können)", options: ["oublier les œuvres d’art", "pouvoir se souvenir des œuvres d’art"], correct: 1 },
-
-  { text: "Sie verliert ihre Sicht vorübergehend.", options: ["Elle perd sa vue temporairement.", "Elle perd sa vue définitivement."], correct: 0 },
-  { text: "Sie wird vorübergehend blind", options: ["Elle sera aveugle temporairement.", "Elle sera aveugle pour toujours."], correct: 0 },
-  { text: "vorübergehend = temporär", options: ["permanent", "temporaire"], correct: 1 },
-
-  { text: "retten", options: ["détruire", "sauver"], correct: 1 },
-  { text: "die Welt retten", options: ["sauver le monde", "détruire le monde"], correct: 0 },
-
-  { text: "auffällig", options: ["invisible", "voyant / remarquable"], correct: 1 },
-  { text: "hervorragend", options: ["excellent", "mauvais"], correct: 0 },
-  { text: "der Wert", options: ["le prix", "la valeur"], correct: 1 },
-  { text: "den Wert schätzen", options: ["apprécier la valeur", "ignorer la valeur"], correct: 0 },
-
-  { text: "Muss ich gearbeitet haben, um den Wert von Geld schätzen zu können?", options: ["Dois-je avoir travaillé pour pouvoir apprécier la valeur de l’argent ?", "Dois-je étudier pour comprendre les mathématiques ?"], correct: 0 },
-  { text: "Du musst gearbeitet haben, damit du den Wert von Geld schätzen kannst.", options: ["Tu dois dormir pour que tu puisses être riche.", "Tu dois avoir travaillé pour que tu puisses apprécier la valeur de l’argent."], correct: 1 },
-  { text: "Sie hat mich nicht gut erzogen.", options: ["Elle m’a très bien protégé.", "Elle ne m’a pas bien éduqué."], correct: 1 },
-
-  { text: "Würdest du vielleicht ein Unternehmen gründen?", options: ["Est-ce que tu fonderais peut-être une entreprise ?", "Est-ce que tu fermerais une entreprise ?"], correct: 0 },
-  { text: "ein Projekt entwickeln", options: ["détruire un projet", "développer un projet"], correct: 1 },
-
-  { text: "vernachlässigen", options: ["protéger", "négliger"], correct: 1 },
-  { text: "der Schlüsselanhänger", options: ["la serrure", "le porte-clés"], correct: 1 },
-  { text: "die Gewohnheit", options: ["l’habitude", "l’exception"], correct: 0 },
-  { text: "die Routine", options: ["l’aventure", "la routine"], correct: 1 },
-
-  { text: "zuhören", options: ["entendre", "écouter attentivement"], correct: 1 },
-  { text: "hören", options: ["écouter attentivement", "entendre"], correct: 1 },
-  { text: "Ich höre dir ganz genau zu.", options: ["Je t’entends vaguement.", "Je t’écoute très attentivement."], correct: 1 }
+const questions =[
+  { "text": "Wie beginnt man korrekt? —> 'Also …'", "options": ["Also ich habe es bemerkt.", "Also habe ich es bemerkt."], "correct": 1 },
+  { "text": "Was bedeutet 'Ich habe mir etwas vorgenommen'?", "options": ["Ich habe etwas verloren.", "Ich habe einen Plan für mich gemacht."], "correct": 1 },
+  { "text": "Was passiert beim Druckausgleich im Ohr?", "options": ["Die Trommelfelle haben sich entspannt.", "Die Trommelfelle haben sich nach innen gesogen."], "correct": 0 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Ich kümmere mich dazu.", "Ich kümmere mich darum."], "correct": 1 },
+  { "text": "Welche Form ist richtig?", "options": ["Nachher kümmere ich mich dazu!", "Nachher kümmere ich mich darum!"], "correct": 1 },
+  { "text": "Wie kann man eine Rechnung bezahlen?", "options": ["per Vergebung", "per Überweisung"], "correct": 1 },
+  { "text": "Welche Aussage stimmt?", "options": ["Ich habe das Geld übergeworfen.", "Ich habe das Geld überwiesen."], "correct": 1 },
+  { "text": "Wie sagt man korrekt?", "options": ["Es löst ein paar Probleme zu geben.", "Es gibt ein paar Probleme zu lösen."], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Diese Person macht mich ruhig.", "Diese Person macht mich wütend."], "correct": 1 },
+  { "text": "Was bedeutet 'die Bedeutung'?", "options": ["Die Größe einer Sache", "Sinn oder Erklärung einer Sache"], "correct": 1 },
+  { "text": "Was ist korrekt?", "options": ["Ein Teil von meiner Arbeit ist Erinnerung.", "Ein Teil von meiner Arbeit ist Routine."], "correct": 1 },
+  { "text": "Welche Tätigkeit passt?", "options": ["etwas Neues vergessen", "etwas Neues entdecken"], "correct": 1 },
+  { "text": "Was bedeutet 'an etwas teilnehmen'?", "options": ["weggehen", "dabei sein"], "correct": 1 },
+  { "text": "Welche Aussage ist richtig?", "options": ["Ich habe mein Studium in der Türkei abschließen.", "Ich habe mein Studium in der Türkei abgeschlossen."], "correct": 1 },
+  { "text": "Was passt zu 'sich verloben'?", "options": ["einen Kredit aufnehmen", "eine Verlobung eingehen"], "correct": 1 },
+  { "text": "Was bedeutet 'sich lohnen'?", "options": ["es ist sinnlos", "es ist wertvoll"], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Wir mögen euch.", "Wir mögen uns."], "correct": 1 },
+  { "text": "Wie sagt man korrekt?", "options": ["Ich erinnere mich auf meinen Traum.", "Ich erinnere mich an meinen Traum."], "correct": 1 },
+  { "text": "Welche Form ist korrekt?", "options": ["Du erinnerst dich darauf, was du geträumt hast.", "Du erinnerst dich daran, was du geträumt hast."], "correct": 1 },
+  { "text": "Was stimmt?", "options": ["Wir haben Probleme, uns daran zu vergessen.", "Wir haben Probleme, uns daran zu erinnern."], "correct": 1 },
+  { "text": "Was bedeutet 'Beschäftigung'?", "options": ["eine Erinnerung", "eine Tätigkeit"], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Er schlägt einen Ausflug zu.", "Er schlägt einen Ausflug vor."], "correct": 1 },
+  { "text": "Wie sagt man korrekt?", "options": ["Gestern gab es stark Regen.", "Gestern gab es starken Regen."], "correct": 1 },
+  { "text": "Welche Form ist richtig?", "options": ["ein starkes Regen", "ein starker Sturm"], "correct": 1 },
+  { "text": "Was passt zu 'im August'?", "options": ["Ich fahre Ende August nach Deutsch.", "Ich fahre Ende August nach Italien."], "correct": 1 },
+  { "text": "Welche Aussage ist sinnvoll?", "options": ["Hat sich der Ort verschwunden?", "Hat sich der Ort verändert?"], "correct": 1 },
+  { "text": "Was bedeutet 'sich verbessern'?", "options": ["schlechter werden", "besser werden"], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["In meinem Ort sind neue Fahrradwege erinnert.", "In meinem Ort sind neue Fahrradwege entstanden."], "correct": 1 },
+  { "text": "Was bedeutet 'umziehen'?", "options": ["etwas anziehen", "den Wohnort wechseln"], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Er hat eine neue Arbeit verloren.", "Er hat eine neue Arbeit gefunden."], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Sie müssen sich beruhigen.", "Sie müssen sich beeilen."], "correct": 1 },
+  { "text": "Welche Aussage stimmt?", "options": ["Wir sind auf Norden von Italien.", "Wir sind im Norden von Italien."], "correct": 1 },
+  { "text": "Welche Tätigkeit passt?", "options": ["ein Dokument beobachten", "ein Dokument bearbeiten"], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Wir müssen das Zimmer vorarbeiten.", "Wir müssen das Zimmer vorbereiten."], "correct": 1 },
+  { "text": "Welche Aussage ist sinnvoll?", "options": ["Auch am Wochenende kümmere ich mich darauf.", "Auch am Wochenende kümmere ich mich darum."], "correct": 1 },
+  { "text": "Was bedeutet 'Trotzdem beneidest du mich!'?", "options": ["Du hilfst mir.", "Du bist eifersüchtig auf mich."], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Im Hintergrund sieht man die Bedeutung.", "Im Hintergrund sieht man die Berge."], "correct": 1 },
+  { "text": "Was passt zu 'empfehlen'?", "options": ["Sie hat es mir empfehlen.", "Sie hat es mir empfohlen."], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Der Schuldirektor unterrichtet nur Mathe.", "Der Schuldirektor leitet die Schule."], "correct": 1 },
+  { "text": "Welche Aussage ist korrekt?", "options": ["Ich habe mit sechs Jahren eingeschult.", "Ich wurde mit sechs Jahren eingeschult."], "correct": 1 }
 ];
 
 // ✨ Shuffle-Funktion
