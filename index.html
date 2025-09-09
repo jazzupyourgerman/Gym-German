@@ -3,21 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Deutsch im Gym Quiz</title>
+  <title>Lückensätze – Wohnen</title>
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
+      background-color: #000;
+      color: #fff;
       text-align: center;
+      height: 100vh;
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: pan-x;
+    }
+
+    img.logo {
+      width: 120px;
+      margin-top: 20px;
     }
 
     .start-screen, .question-screen, .result-screen {
       display: none;
       height: 100vh;
-      background-size: cover;
-      background-position: center;
       justify-content: center;
       align-items: center;
       flex-direction: column;
@@ -25,62 +33,105 @@
     }
 
     .start-screen {
-      background-image: url('https://res.cloudinary.com/dgk2pnahd/image/upload/v1744492761/Titelbild_igabvu.png');
       display: flex;
     }
 
     .start-screen h1 {
       color: white;
-      font-size: 1.5em;
-      margin-bottom: 20px;
-      text-shadow: 2px 2px 4px #000;
+      font-size: 1.8em;
+      margin: 20px 0;
     }
 
-    button {
-      padding: 10px 20px;
-      font-size: 0.9em;
-      background-color: #007bff;
+    .start-button {
+      padding: 12px 24px;
+      font-size: 1em;
+      background-color: #e63946;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
     }
 
-    button:hover {
-      background-color: #0056b3;
+    .start-button:hover {
+      background-color: #c62828;
     }
 
     .question-screen {
-      display: none;
-      height: 100vh;
-      background-size: cover;
-      background-position: center;
-      justify-content: flex-start;
-      align-items: center;
-      flex-direction: column;
-      padding: 40px 20px 20px;
+      display: flex;
+      position: relative;
     }
 
-    .question-screen img {
-      width: 100%;
-      max-width: 300px;
-      max-height: 40vh;
-      margin-bottom: 25px;
-      border-radius: 10px;
+    .question {
+      margin-bottom: 30px;
+    }
+
+    .question p {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+    }
+
+    #progress-text {
+      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: 1em;
     }
 
     .answers {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-bottom: 20px;
-      width: 100%;
+      gap: 10px;
       max-width: 300px;
+      margin: 0 auto 20px auto;
     }
 
     .answers button {
-      padding: 8px 12px;
-      font-size: 0.85em;
+      padding: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    .answers button:hover {
+      background-color: #0056b3;
+    }
+
+    .answers button:disabled {
+      cursor: default;
+      opacity: 0.8;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      width: 300px;
+      margin: 0 auto;
+    }
+
+    .nav-buttons button {
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #555;
+      color: white;
+      cursor: pointer;
+    }
+
+    .nav-buttons button:hover {
+      background-color: #777;
+    }
+
+    .result-screen {
+      display: none;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto; /* ✨ Scrollen nur auf Auswertungsseite erlauben */
     }
 
     .result-screen h2 {
@@ -100,168 +151,284 @@
     }
 
     .corrections p {
-      margin: 4px 0;
+      margin: 8px 0;
     }
 
-    @media (min-width: 768px) {
-      .start-screen h1 {
-        font-size: 2em;
-      }
+    .progress-bar {
+      height: 10px;
+      background: #444;
+      margin-top: 10px;
+      width: 100%;
+    }
 
-      button {
-        padding: 15px 30px;
-        font-size: 1em;
-      }
+    .progress {
+      height: 10px;
+      background: green;
+      width: 0%;
+    }
 
-      .question-screen img {
-        max-width: 500px;
-      }
+    .social-icons {
+      margin-top: 20px;
+    }
+
+    .social-icons a {
+      margin: 0 10px;
+      color: white;
+      text-decoration: none;
+      font-size: 1.5em;
     }
   </style>
 </head>
 <body>
   <div class="start-screen">
-    <h1>Teste dein Gym-Deutsch!<br>A1 oder C1?</h1>
-    <button onclick="startQuiz()">Starte das Bilderquiz!</button>
+    <img src="logoo.png" alt="Logo" class="logo">
+    <h1>Swipe left or right!</h1>
+    <button class="start-button" onclick="startQuiz()">Los geht’s!</button>
   </div>
 
   <div class="question-screen">
-    <img id="quiz-image" src="" alt="Quiz Bild">
-    <div class="answers" id="answer-buttons"></div>
+    <p id="progress-text"></p>
+    <div class="progress-bar"><div class="progress" id="progress-bar"></div></div>
+    <div class="question" id="question-container"></div>
+    <div class="nav-buttons">
+      <button onclick="prevQuestion()">Zurück</button>
+      <button onclick="nextQuestion()">Weiter</button>
+    </div>
   </div>
 
   <div class="result-screen">
     <h2 id="score-text"></h2>
-    <p>Check meine Seite aus und folge mir auf Instagram.</p>
-
     <div class="corrections" id="correction-list"></div>
-
-    <a href="https://jazzupyourgerman.com" target="_blank">
-      <button style="margin: 10px;">Zur Website</button>
-    </a>
-
-    <a href="https://www.instagram.com/jazzupyourgerman/" target="_blank">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" style="width: 40px; height: 40px; margin-top: 10px;">
-    </a>
+    <button class="start-button" onclick="restartQuiz()">Nochmal spielen</button>
+    <div class="social-icons">
+      <a href="https://www.jazzupyourgerman.com" target="_blank">🌐</a>
+      <a href="https://www.instagram.com/jazzupyourgerman/" target="_blank">📸</a>
+    </div>
   </div>
-
-
 <script>
-  const questions = [
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490986/wegra%CC%88umen_qcdha6.png', options: ['essen', 'ausräumen', 'wegräumen', 'aufräumen'], correct: 2 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/dem_lyukcr.png', options: ['dem', 'der', 'das', 'ein'], correct: 0 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490984/Sa%CC%88tze_wpvlid.png', options: ['Sätzen', 'Sätze', 'Hantel', 'Hanteln'], correct: 1 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/Mitgliedschaft_zweni2.png', options: ['Mitgliedschaft', 'Abonnement', 'Isolationsübung', 'Supplement'], correct: 0 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/Klimmzu%CC%88ge_e1skzq.png', options: ['Liegestütze', 'Klimmzüge', 'Sit-ups', 'Joggen'], correct: 1 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490984/aufbauen_rbqgxf.png', options: ['zerstören', 'erhöhen', 'aufbauen', 'größer werden'], correct: 2 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490986/abwechseln_shjlco.png', options: ['stärker werden', 'spotten', 'abwechseln', 'trainieren'], correct: 2 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490986/freie_Gewichte_i9gd4n.png', options: ['Gewichten', 'Geräten', 'Getränken', 'Handtüchern'], correct: 0 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/runternehmen_anh80m.png', options: ['runternehmen', 'abnehmen', 'klein machen', 'weniger machen'], correct: 0 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490987/Muskelkater_sikbb3.png', options: ['Muskelkalter', 'Rückenschmerzen', 'Kater', 'Bizeps'], correct: 0 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490985/benutze_iwumis.png', options: ['trainiere', 'hebe', 'benutze', 'arbeite'], correct: 2 },
-    { image: 'https://res.cloudinary.com/dgk2pnahd/image/upload/v1744490986/Schulterdru%CC%88cken_kkanvs.png', options: ['Latziehen', 'Liegestütze', 'Kniebeugen', 'Schulterdrücken'], correct: 3 },
-  ];
+const questions = [
+  { text: "Hat er angefangen auf dem Gymnasium?", options: ["A-t-il commencé à l’université ?", "A-t-il commencé au lycée ?"], correct: 1 },
+  { text: "das Lycée", options: ["l’université", "le lycée"], correct: 1 },
+  { text: "ein französisches …", options: ["un … allemand", "un … français"], correct: 1 },
+  { text: "schummeln", options: ["réussir", "tricher"], correct: 1 },
+  { text: "Ich schummel(e)", options: ["j’étudie", "je triche"], correct: 1 },
+  { text: "Ich habe geschummelt", options: ["j’ai triché", "j’ai étudié"], correct: 0 },
+  { text: "das FG", options: ["la fac", "le FG"], correct: 1 },
+  { text: "Ich gehe zum FG", options: ["je vais au cinéma", "je vais au FG"], correct: 1 },
+  { text: "ins FG", options: ["dans la fac", "au FG"], correct: 1 },
 
-  const correctionTexts = [
-    "Könntest du bitte deine Gewichte <b>wegräumen</b>?",
-    "Ich nehme EAA vor <b>dem</b> Training.",
-    "Wie viel kostet die <b>Mitgliedschaft</b>?",
-    "<b>Klimmzüge</b> sind eine Grundübung für den Rücken.",
-    "Ich möchte Muskeln <b>aufbauen</b>.",
-    "Können wir uns am Gerät <b>abwechseln</b>?",
-    "Ich trainiere gern mit freien <b>Gewichten</b>.",
-    "Zu viel Gewicht? Du musst Gewicht <b>runternehmen</b>.",
-    "Morgen habe ich <b>Muskelkater</b>!",
-    "Ich <b>benutze</b> das gerade!",
-    "<b>Schulterdrücken</b> ist eine gute Übung für die Schulter!"
-  ];
+  { text: "Enkelkinder", options: ["les cousins", "les petits-enfants"], correct: 1 },
+  { text: "die Enkeltochter", options: ["la petite-fille", "la cousine"], correct: 0 },
+  { text: "der Enkelsohn", options: ["le petit-fils", "le neveu"], correct: 0 },
+  { text: "meine Enkel und Urenkel", options: ["mes enfants et cousins", "mes petits-enfants et arrière-petits-enfants"], correct: 1 },
 
-  let currentQuestion = 0;
-  let score = 0;
-  let incorrectAnswers = [];
+  { text: "das Sachbuch", options: ["le roman", "le livre documentaire"], correct: 1 },
+  { text: "der Roman", options: ["le poème", "le roman"], correct: 1 },
 
-  function startQuiz() {
-    document.querySelector('.start-screen').style.display = 'none';
-    document.querySelector('.question-screen').style.display = 'flex';
+  { text: "blind werden", options: ["voir clair", "devenir aveugle"], correct: 1 },
+  { text: "Vielleicht wird sie bald blind", options: ["Peut-être qu’elle va bientôt devenir aveugle", "Peut-être qu’elle voit bien"], correct: 0 },
+  { text: "Vielleicht wird sie bald blind werden", options: ["Peut-être qu’elle deviendra bientôt aveugle", "Peut-être qu’elle est en bonne santé"], correct: 0 },
+  { text: "Vielleicht wird sie bald blind sein", options: ["Peut-être qu’elle sera bientôt riche", "Peut-être qu’elle sera bientôt aveugle"], correct: 1 },
+  { text: "Sie wird vielleicht blind.", options: ["Elle deviendra peut-être aveugle.", "Elle entendra peut-être bien."], correct: 0 },
+  { text: "Sie ist blind geworden", options: ["Elle est restée en bonne santé", "Elle est devenue aveugle"], correct: 1 },
+
+  { text: "die Kunst (künstlich)", options: ["la nature", "l’art (artificiel)"], correct: 1 },
+  { text: "das Gemälde", options: ["le livre", "le tableau"], correct: 1 },
+  { text: "das Kunstwerk", options: ["le travail", "l’œuvre d’art"], correct: 1 },
+  { text: "die Kunstwerke", options: ["les œuvres d’art", "les travaux"], correct: 0 },
+  { text: "Schaut sie sich zusammen mit ihrem Opa die großen Kunstwerke an?", options: ["Lit-elle un roman avec son grand-père ?", "Regarde-t-elle les grandes œuvres d’art avec son grand-père ?"], correct: 1 },
+  { text: "sich an die Kunstwerke erinnern (können)", options: ["oublier les œuvres d’art", "pouvoir se souvenir des œuvres d’art"], correct: 1 },
+
+  { text: "Sie verliert ihre Sicht vorübergehend.", options: ["Elle perd sa vue temporairement.", "Elle perd sa vue définitivement."], correct: 0 },
+  { text: "Sie wird vorübergehend blind", options: ["Elle sera aveugle temporairement.", "Elle sera aveugle pour toujours."], correct: 0 },
+  { text: "vorübergehend = temporär", options: ["permanent", "temporaire"], correct: 1 },
+
+  { text: "retten", options: ["détruire", "sauver"], correct: 1 },
+  { text: "die Welt retten", options: ["sauver le monde", "détruire le monde"], correct: 0 },
+
+  { text: "auffällig", options: ["invisible", "voyant / remarquable"], correct: 1 },
+  { text: "hervorragend", options: ["excellent", "mauvais"], correct: 0 },
+  { text: "der Wert", options: ["le prix", "la valeur"], correct: 1 },
+  { text: "den Wert schätzen", options: ["apprécier la valeur", "ignorer la valeur"], correct: 0 },
+
+  { text: "Muss ich gearbeitet haben, um den Wert von Geld schätzen zu können?", options: ["Dois-je avoir travaillé pour pouvoir apprécier la valeur de l’argent ?", "Dois-je étudier pour comprendre les mathématiques ?"], correct: 0 },
+  { text: "Du musst gearbeitet haben, damit du den Wert von Geld schätzen kannst.", options: ["Tu dois dormir pour que tu puisses être riche.", "Tu dois avoir travaillé pour que tu puisses apprécier la valeur de l’argent."], correct: 1 },
+  { text: "Sie hat mich nicht gut erzogen.", options: ["Elle m’a très bien protégé.", "Elle ne m’a pas bien éduqué."], correct: 1 },
+
+  { text: "Würdest du vielleicht ein Unternehmen gründen?", options: ["Est-ce que tu fonderais peut-être une entreprise ?", "Est-ce que tu fermerais une entreprise ?"], correct: 0 },
+  { text: "ein Projekt entwickeln", options: ["détruire un projet", "développer un projet"], correct: 1 },
+
+  { text: "vernachlässigen", options: ["protéger", "négliger"], correct: 1 },
+  { text: "der Schlüsselanhänger", options: ["la serrure", "le porte-clés"], correct: 1 },
+  { text: "die Gewohnheit", options: ["l’habitude", "l’exception"], correct: 0 },
+  { text: "die Routine", options: ["l’aventure", "la routine"], correct: 1 },
+
+  { text: "zuhören", options: ["entendre", "écouter attentivement"], correct: 1 },
+  { text: "hören", options: ["écouter attentivement", "entendre"], correct: 1 },
+  { text: "Ich höre dir ganz genau zu.", options: ["Je t’entends vaguement.", "Je t’écoute très attentivement."], correct: 1 }
+];
+
+// ✨ Shuffle-Funktion
+function shuffleArray(array) {
+  return array
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+}
+
+// ✨ Optionen zufällig mischen und correct-Index anpassen
+function randomizeQuestions(questions) {
+  return questions.map(q => {
+    const options = shuffleArray(q.options);
+    const correctAnswer = q.options[q.correct];
+    const correctIndex = options.indexOf(correctAnswer);
+    return {
+      text: q.text,
+      options: options,
+      correct: correctIndex
+    };
+  });
+}
+
+// Verwende die zufällig gemischten Fragen
+let randomizedQuestions = randomizeQuestions(questions);
+
+let currentQuestion = 0;
+let score = 0;
+let incorrectAnswers = [];
+let userAnswers = [];
+
+function startQuiz() {
+  document.querySelector('.start-screen').style.display = 'none';
+  document.querySelector('.question-screen').style.display = 'flex';
+  document.body.style.overflow = 'hidden'; // ✨ Scrollen verhindern
+  showQuestion();
+}
+
+function showQuestion() {
+  const container = document.getElementById('question-container');
+  const progressText = document.getElementById('progress-text');
+  const progressBar = document.getElementById('progress-bar');
+  container.innerHTML = '';
+
+  const q = randomizedQuestions[currentQuestion];
+  progressText.textContent = `Frage ${currentQuestion + 1} von ${randomizedQuestions.length}`;
+  progressBar.style.width = `${((currentQuestion) / randomizedQuestions.length) * 100}%`;
+
+  const questionText = document.createElement('p');
+  questionText.textContent = q.text;
+  container.appendChild(questionText);
+
+  const answerButtons = document.createElement('div');
+  answerButtons.classList.add('answers');
+
+  q.options.forEach((option, index) => {
+    const btn = document.createElement('button');
+    btn.textContent = option;
+    btn.onclick = () => handleAnswer(btn, index, answerButtons);
+    answerButtons.appendChild(btn);
+  });
+
+  container.appendChild(answerButtons);
+}
+
+function handleAnswer(clickedButton, index, buttonContainer) {
+  const q = randomizedQuestions[currentQuestion];
+  const buttons = buttonContainer.querySelectorAll('button');
+
+  buttons.forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === q.correct) {
+      btn.style.backgroundColor = 'green';
+    } else if (btn === clickedButton) {
+      btn.style.backgroundColor = 'red';
+    } else {
+      btn.style.backgroundColor = '#007bff';
+    }
+  });
+
+  userAnswers[currentQuestion] = index;
+
+  if (index === q.correct) {
+    score++;
+  } else {
+    incorrectAnswers.push({ question: q.text, correctAnswer: q.options[q.correct] });
+  }
+}
+
+function nextQuestion() {
+  if (currentQuestion < randomizedQuestions.length - 1) {
+    currentQuestion++;
+    showQuestion();
+  } else if (currentQuestion === randomizedQuestions.length - 1) {
+    currentQuestion++;
+    showResult();
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
     showQuestion();
   }
+}
 
-  function showQuestion() {
-    const q = questions[currentQuestion];
-    document.getElementById('quiz-image').src = q.image;
-    const answerButtons = document.getElementById('answer-buttons');
-    answerButtons.innerHTML = '';
-    q.options.forEach((option, index) => {
-      const btn = document.createElement('button');
-      btn.textContent = option;
-      btn.onclick = () => handleAnswer(btn, index);
-      answerButtons.appendChild(btn);
-    });
+function showResult() {
+  document.querySelector('.question-screen').style.display = 'none';
+  const resultScreen = document.querySelector('.result-screen');
+  resultScreen.style.display = 'flex';
+  document.body.style.overflow = 'auto'; // ✨ Scrollen auf Auswertungsseite erlauben
+
+  const scoreText = document.getElementById('score-text');
+  scoreText.textContent = `Du hast ${score} von ${randomizedQuestions.length} richtig.`;
+
+  const correctionList = document.getElementById('correction-list');
+  correctionList.innerHTML = '';
+
+  randomizedQuestions.forEach((q, i) => {
+    const p = document.createElement('p');
+    const isCorrect = userAnswers[i] === q.correct;
+    const status = isCorrect ? "✅ Richtig" : `❌ Falsch – Richtige Antwort: ${q.options[q.correct]}`;
+    p.innerHTML = `<strong>Frage ${i + 1}:</strong> ${q.text.replace("___", "_____")}<br>${status}`;
+    correctionList.appendChild(p);
+  });
+}
+
+function restartQuiz() {
+  currentQuestion = 0;
+  score = 0;
+  incorrectAnswers = [];
+  userAnswers = [];
+
+  // ✨ Neue Randomisierung bei Neustart
+  randomizedQuestions = randomizeQuestions(questions);
+
+  document.querySelector('.result-screen').style.display = 'none';
+  document.querySelector('.start-screen').style.display = 'flex';
+  document.body.style.overflow = 'hidden'; // ✨ Scrollen wieder deaktivieren
+}
+
+// Swipe gesture support
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+function handleSwipe() {
+  if (touchEndX < touchStartX - 50) {
+    nextQuestion();
   }
-
-  function handleAnswer(clickedButton, index) {
-    const buttons = document.querySelectorAll('#answer-buttons button');
-    const correctIndex = questions[currentQuestion].correct;
-
-    buttons.forEach((btn, i) => {
-      btn.disabled = true;
-      if (i === correctIndex) {
-        btn.style.backgroundColor = '#28a745'; // grün
-      } else if (i === index) {
-        btn.style.backgroundColor = '#dc3545'; // rot
-      } else {
-        btn.style.backgroundColor = '#ccc';
-      }
-    });
-
-    if (index === correctIndex) {
-      score++;
-    } else {
-      incorrectAnswers.push(currentQuestion);
-    }
-
-    currentQuestion++;
-    setTimeout(() => {
-      if (currentQuestion < questions.length) {
-        showQuestion();
-      } else {
-        showResult();
-      }
-    }, 1200);
+  if (touchEndX > touchStartX + 50) {
+    prevQuestion();
   }
-
-  function showResult() {
-    document.querySelector('.question-screen').style.display = 'none';
-    const resultScreen = document.querySelector('.result-screen');
-    resultScreen.style.display = 'flex';
-    let resultText = '';
-    if (score >= 10) resultText = '🏋️‍♂️ Mega gemacht!';
-    else if (score >= 7) resultText = '💪 Richtig stark!';
-    else if (score >= 4) resultText = '👍 Ganz okay, aber da geht mehr!';
-    else resultText = '😅 Nicht schlimm, einfach weitermachen!';
-
-    document.getElementById('score-text').innerHTML = `${resultText}<br>Du hast <b>${score}</b> von <b>${questions.length}</b> richtig.`;
-
-    const correctionList = document.getElementById('correction-list');
-    correctionList.innerHTML = '';
-    incorrectAnswers.forEach(index => {
-      const p = document.createElement('p');
-      p.innerHTML = correctionTexts[index];
-      correctionList.appendChild(p);
-    });
-  }
+}
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>
